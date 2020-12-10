@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+SALT="$(create_passwd 16)"
+PASSWORD_SHA1="$(echo -n "${PASSWORD}${SALT}" | openssl dgst -sha1 | awk '{print $NF}')"
+
+export PASSWORD_SHA1=$PASSWORD_SHA1
+export SALT=$SALT

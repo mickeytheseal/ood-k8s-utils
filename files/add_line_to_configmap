@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+LINE=$1
+FILENAME_RAW=$2
+FILENAME_ESCAPED=$( echo "$FILENAME_RAW" | sed 's#\.#\\\.#g')
+JSON_PATH=".data.$FILENAME_ESCAPED"
+
+CFG="$(hostname)-configmap"
+
+DATAFILE="/tmp/$FILENAME_RAW"
+
+kubectl get configmap "$CFG" -o jsonpath="{$JSON_PATH}" > "$DATAFILE"
+echo "$LINE" >> "$DATAFILE"
+
+KUBE_CREATE="kubectl create configmap "$CFG" --from-file $DATAFILE -o yaml --dry-run"
+$KUBE_CREATE | kubectl apply -f -
+
+rm "$DATAFILE"

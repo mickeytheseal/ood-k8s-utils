@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+PASSWORD=$(tr -cd 'a-zA-Z0-9' < /dev/urandom 2> /dev/null | head "-c${PASSWORD_SIZE:=16}")
+export PASSWORD

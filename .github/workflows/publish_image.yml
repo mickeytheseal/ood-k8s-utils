@@ -1,0 +1,29 @@
+name: Publish Docker image
+
+on:
+  push:
+    tags: '*'
+
+jobs:
+  push_to_registry:
+    name: Push Docker image to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup the environment
+        run: |
+          TAG=$(echo $GITHUB_REF | awk -F'/' '{ print $3}')
+          REPO="docker.io/ohiosupercomputer"
+          echo "LATEST_IMG=$REPO/ood-k8s-utils:latest" >> $GITHUB_ENV
+          echo "VERSIONED_IMG=$REPO/ood-k8s-utils:$TAG" >> $GITHUB_ENV
+      - name: docker build and tag
+        run: | 
+          docker build -t $LATEST_IMG .
+          docker tag $LATEST_IMG $VERSIONED_IMG
+      - name: login to dockerhub
+        run: docker login -u jeffohrstrom -p ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: push images to dockerhub
+        run: |
+          docker push $LATEST_IMG
+          docker push $VERSIONED_IMG
