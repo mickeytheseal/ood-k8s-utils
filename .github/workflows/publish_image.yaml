@@ -23,7 +23,7 @@ jobs:
           docker build -t $LATEST_IMG .
           docker tag $LATEST_IMG $VERSIONED_IMG
       - name: login to dockerhub
-        run: docker login -u {{ secrets.OSC_ROBOT_DOCKERHUB_USER }} -p ${{ secrets.OSC_ROBOT_DOCKERHUB_TOKEN }}
+        run: docker login -u ${{ secrets.OSC_ROBOT_DOCKERHUB_USER }} -p ${{ secrets.OSC_ROBOT_DOCKERHUB_TOKEN }}
       - name: push images to dockerhub
         run: |
           docker push $LATEST_IMG
