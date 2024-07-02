@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
 PORT_CFG=$(kubectl get services $(hostname)-service -o jsonpath="{.spec.ports[0].nodePort}")
-HOST_CFG=$(kubectl get pods $(hostname) -o jsonpath="{.status.hostIP}")
+HOST_CFG=$(kubectl get pods $(hostname) -o jsonpath="{.spec.nodeName}")
 
-IP_REX="([0-9]{1,3}\.)+([0-9]{1,3})"
+# IP_REX="([0-9]{1,3}\.)+([0-9]{1,3})"
 
-if [[ $HOST_CFG =~ $IP_REX ]]; then
-  HOST_CFG=$(dig +short -x $HOST_CFG)
-  # now remove the trailing .
-  HOST_CFG=${HOST_CFG::-1}
-fi
+# if [[ $HOST_CFG =~ $IP_REX ]]; then
+#   HOST_CFG=$(dig +short -x $HOST_CFG)
+#   # now remove the trailing .
+#   HOST_CFG=${HOST_CFG::-1}
+# fi
 
 
 export HOST_CFG=$HOST_CFG
